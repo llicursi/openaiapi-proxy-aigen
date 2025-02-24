@@ -110,6 +110,28 @@ The server uses YAML configuration files based on the environment:
 * `config.staging.yaml` - Staging settings
 * `config.production.yaml` - Production settings
 
+== Testing
+
+To run all tests with coverage for internal packages:
+
+[source,bash]
+----
+go test -cover ./internal/...
+----
+
+This command will:
+
+* Run all tests in the `internal/` directory and its subdirectories
+* Show the test coverage percentage for each package
+* Display test results and any failures
+
+For verbose output, add the `-v` flag:
+
+[source,bash]
+----
+go test -v -cover ./internal/...
+----
+
 === Configuration Structure
 
 [source,yaml]
