@@ -1,0 +1,281 @@
+= OpenAI API Mock Server
+:toc: left
+:source-highlighter: highlight.js
+:icons: font
+:experimental:
+
+A robust mock server that simulates OpenAI's API endpoints for development and testing purposes. This server acts as a proxy, logging all requests while forwarding them to a specified endpoint, making it ideal for debugging, testing, and development workflows.
+
+[NOTE]
+====
+This project was completely generated using https://cursor.sh[Cursor.ai] and Claude 3.5 Sonnet, without previous knowledge of Go programming. AsciiDoc documentation format was chosen over Markdown due to its better handling of complex documentation and to avoid common formatting issues produced by AI-generated Markdown.
+====
+
+== Features
+
+* Full request/response logging with rotation
+* Environment-based configuration
+* Swagger/OpenAPI documentation
+* Request forwarding to actual OpenAI API
+* Support for multiple environments (development, staging, production)
+* Configurable log rotation and compression
+
+== Available Endpoints
+
+[cols="1,2"]
+|===
+|Endpoint |Description
+
+|`/v1/chat/completions`
+|Mock chat completions endpoint supporting GPT-3.5/4 models
+
+|`/v1/completions`
+|Legacy completions endpoint for older models
+
+|`/v1/embeddings`
+|Text embeddings endpoint for vector representations
+
+|`/v1/moderations`
+|Content moderation endpoint for text analysis
+|===
+
+== Getting Started
+
+=== Prerequisites
+
+* Go 1.21 or higher
+* Git
+* Access to target OpenAI API (for forwarding)
+
+=== Installation
+
+. Clone the repository:
++
+[source,bash]
+----
+git clone https://github.com/yourusername/openai-mock-server.git
+cd openai-mock-server
+----
+
+. Install dependencies:
++
+[source,bash]
+----
+go mod download
+----
+
+. Generate Swagger documentation:
++
+[source,bash]
+----
+swag init -g cmd/main.go
+----
+
+=== Running the Server
+
+The server supports different environments through configuration files and environment variables.
+
+==== Development Environment
+[source,bash]
+----
+# Default development setup
+go run cmd/main.go
+
+# With explicit environment
+ENV=development go run cmd/main.go
+
+# With custom forward URL
+ENV=development FORWARD_URL=https://api.openai.com/v1 go run cmd/main.go
+----
+
+==== Staging Environment
+[source,bash]
+----
+ENV=staging FORWARD_URL=https://staging-api.example.com go run cmd/main.go
+----
+
+==== Production Environment
+[source,bash]
+----
+ENV=production FORWARD_URL=https://api.openai.com/v1 go run cmd/main.go
+----
+
+== Configuration
+
+=== Environment-Specific Configuration Files
+
+The server uses YAML configuration files based on the environment:
+
+* `config.development.yaml` - Development settings
+* `config.staging.yaml` - Staging settings
+* `config.production.yaml` - Production settings
+
+=== Configuration Structure
+
+[source,yaml]
+----
+server:
+  port: 8080
+  forward_url: "http://localhost:8081"
+
+logging:
+  filename: "inspect.log"
+  max_size: 10      # megabytes before rotation
+  max_backups: 3    # number of backups to keep
+  max_age: 28       # days to keep backups
+  compress: true    # compress rotated files
+----
+
+=== Environment Variables
+
+All configuration values can be overridden using environment variables:
+
+[cols="1,1,2"]
+|===
+|Variable |Default |Description
+
+|ENV
+|development
+|Environment name (development, staging, production)
+
+|PORT
+|8080
+|Server port number
+
+|FORWARD_URL
+|http://localhost:8081
+|Target URL for request forwarding
+
+|LOG_FILE
+|inspect.log
+|Log file location
+
+|LOG_MAX_SIZE
+|10
+|Maximum log size in MB before rotation
+
+|LOG_MAX_BACKUPS
+|3
+|Number of rotated log files to keep
+
+|LOG_MAX_AGE
+|28
+|Days to keep rotated log files
+
+|LOG_COMPRESS
+|true
+|Whether to compress rotated logs
+|===
+
+== API Usage
+
+=== Chat Completions
+
+Send chat completion requests:
+
+[source,bash]
+----
+curl -X POST http://localhost:8080/v1/chat/completions \
+  -H "Content-Type: application/json" \
+  -d '{
+    "model": "gpt-3.5-turbo",
+    "messages": [
+      {"role": "system", "content": "You are a helpful assistant."},
+      {"role": "user", "content": "Hello, how are you?"}
+    ]
+  }'
+----
+
+=== Legacy Completions
+
+For older model compatibility:
+
+[source,bash]
+----
+curl -X POST http://localhost:8080/v1/completions \
+  -H "Content-Type: application/json" \
+  -d '{
+    "model": "text-davinci-003",
+    "prompt": "Hello, how are you?",
+    "max_tokens": 50
+  }'
+----
+
+=== Embeddings
+
+Generate text embeddings:
+
+[source,bash]
+----
+curl -X POST http://localhost:8080/v1/embeddings \
+  -H "Content-Type: application/json" \
+  -d '{
+    "model": "text-embedding-ada-002",
+    "input": "Hello, how are you?"
+  }'
+----
+
+=== Moderations
+
+Check content moderation:
+
+[source,bash]
+----
+curl -X POST http://localhost:8080/v1/moderations \
+  -H "Content-Type: application/json" \
+  -d '{
+    "model": "text-moderation-latest",
+    "input": "Hello, how are you?"
+  }'
+----
+
+== API Documentation
+
+Interactive API documentation is available through Swagger UI when the server is running:
+
+* Local Development: http://localhost:8080/swagger/index.html
+* Staging: http://staging-host:8080/swagger/index.html
+* Production: http://production-host:8080/swagger/index.html
+
+== Logging
+
+=== Log File Location
+
+Logs are written to both console and file:
+
+* Development: `./inspect.log`
+* Staging: `./inspect.log`
+* Production: `/var/log/inspect-proxy/inspect.log`
+
+=== Log Format
+
+Each log entry includes:
+
+* Timestamp
+* Request method
+* Request path
+* Remote address
+* Response status
+* Processing time
+
+Example log entry:
+[source,text]
+----
+2024/03/21 10:15:23 ChatCompletions request from 127.0.0.1:12345: POST /v1/chat/completions
+----
+
+== Contributing
+
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add some amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+== License
+
+This project is licensed under the MIT License - see the LICENSE file for details.
+
+== Support
+
+For support, please open an issue in the GitHub repository.

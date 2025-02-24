@@ -1,0 +1,95 @@
+basePath: /v1
+definitions:
+  handlers.ApiResponse:
+    properties:
+      message:
+        type: string
+      model:
+        type: string
+      object:
+        type: string
+    type: object
+host: localhost:8080
+info:
+  contact: {}
+  description: A proxy service for inspecting and forwarding API requests.
+  title: Inspect Proxy API
+  version: "1.0"
+paths:
+  /chat/completions:
+    post:
+      consumes:
+      - application/json
+      description: Forwards chat completion requests to the configured endpoint
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handlers.ApiResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handlers.ApiResponse'
+      summary: Forward chat completions requests
+      tags:
+      - openai
+  /completions:
+    post:
+      consumes:
+      - application/json
+      description: Forwards completion requests to the configured endpoint
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handlers.ApiResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handlers.ApiResponse'
+      summary: Forward completions requests
+      tags:
+      - openai
+  /embeddings:
+    post:
+      consumes:
+      - application/json
+      description: Forwards embedding requests to the configured endpoint
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handlers.ApiResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handlers.ApiResponse'
+      summary: Forward embeddings requests
+      tags:
+      - openai
+  /moderations:
+    post:
+      consumes:
+      - application/json
+      description: Forwards moderation requests to the configured endpoint
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handlers.ApiResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handlers.ApiResponse'
+      summary: Forward moderations requests
+      tags:
+      - openai
+swagger: "2.0"

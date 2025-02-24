@@ -1,0 +1,10 @@
+server:
+  port: 8080
+  forward_url: "http://localhost:1234"
+
+logging:
+  filename: "inspect.log"
+  max_size: 10
+  max_backups: 3
+  max_age: 28
+  compress: true

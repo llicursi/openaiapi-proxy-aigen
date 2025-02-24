@@ -1,0 +1,10 @@
+server:
+  port: 8080
+  forward_url: "https://api.staging.example.com"
+
+logging:
+  filename: "inspect.log"
+  max_size: 50
+  max_backups: 5
+  max_age: 28
+  compress: true

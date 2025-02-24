@@ -1,0 +1,10 @@
+server:
+  port: 8080
+  forward_url: "https://api.example.com"
+
+logging:
+  filename: "/var/log/inspect-proxy/inspect.log"
+  max_size: 100
+  max_backups: 10
+  max_age: 90
+  compress: true
