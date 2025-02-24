@@ -12,6 +12,14 @@ import "net/http"
 // @Failure      500  {object}  ApiResponse
 // @Router       /chat/completions [post]
 func (h *Handler) ChatCompletions(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodPost {
+		w.WriteHeader(http.StatusMethodNotAllowed)
+		jsonResponse(w, ApiResponse{
+			Message: "Only POST requests are allowed",
+			Object:  "error",
+		})
+		return
+	}
 	h.logger.Printf("ChatCompletions request from %s: %s %s", r.RemoteAddr, r.Method, r.URL.Path)
 	if err := h.forwardRequest(w, r); err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
@@ -32,6 +40,14 @@ func (h *Handler) ChatCompletions(w http.ResponseWriter, r *http.Request) {
 // @Failure      500  {object}  ApiResponse
 // @Router       /completions [post]
 func (h *Handler) Completions(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodPost {
+		w.WriteHeader(http.StatusMethodNotAllowed)
+		jsonResponse(w, ApiResponse{
+			Message: "Only POST requests are allowed",
+			Object:  "error",
+		})
+		return
+	}
 	h.logger.Printf("Completions request from %s: %s %s", r.RemoteAddr, r.Method, r.URL.Path)
 	if err := h.forwardRequest(w, r); err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
@@ -52,6 +68,14 @@ func (h *Handler) Completions(w http.ResponseWriter, r *http.Request) {
 // @Failure      500  {object}  ApiResponse
 // @Router       /embeddings [post]
 func (h *Handler) Embeddings(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodPost {
+		w.WriteHeader(http.StatusMethodNotAllowed)
+		jsonResponse(w, ApiResponse{
+			Message: "Only POST requests are allowed",
+			Object:  "error",
+		})
+		return
+	}
 	h.logger.Printf("Embeddings request from %s: %s %s", r.RemoteAddr, r.Method, r.URL.Path)
 	if err := h.forwardRequest(w, r); err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
@@ -72,6 +96,14 @@ func (h *Handler) Embeddings(w http.ResponseWriter, r *http.Request) {
 // @Failure      500  {object}  ApiResponse
 // @Router       /moderations [post]
 func (h *Handler) Moderations(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodPost {
+		w.WriteHeader(http.StatusMethodNotAllowed)
+		jsonResponse(w, ApiResponse{
+			Message: "Only POST requests are allowed",
+			Object:  "error",
+		})
+		return
+	}
 	h.logger.Printf("Moderations request from %s: %s %s", r.RemoteAddr, r.Method, r.URL.Path)
 	if err := h.forwardRequest(w, r); err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
