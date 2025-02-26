@@ -68,7 +68,7 @@ go mod download
 +
 [source,bash]
 ----
-swag init -g cmd/main.go
+swag init -g main.go
 ----
 
 === Running the Server
@@ -79,25 +79,25 @@ The server supports different environments through configuration files and envir
 [source,bash]
 ----
 # Default development setup
-go run cmd/main.go
+go run main.go
 
 # With explicit environment
-ENV=development go run cmd/main.go
+ENV=development go run main.go
 
 # With custom forward URL
-ENV=development FORWARD_URL=https://api.openai.com/v1 go run cmd/main.go
+ENV=development FORWARD_URL=https://api.openai.com/v1 go run main.go
 ----
 
 ==== Staging Environment
 [source,bash]
 ----
-ENV=staging FORWARD_URL=https://staging-api.example.com go run cmd/main.go
+ENV=staging FORWARD_URL=https://staging-api.example.com go run main.go
 ----
 
 ==== Production Environment
 [source,bash]
 ----
-ENV=production FORWARD_URL=https://api.openai.com/v1 go run cmd/main.go
+ENV=production FORWARD_URL=https://api.openai.com/v1 go run main.go
 ----
 
 == Configuration
