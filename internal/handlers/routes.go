@@ -9,7 +9,6 @@ import "net/http"
 // @Accept       json
 // @Produce      json
 // @Success      200  {object}  ApiResponse
-// @Failure      500  {object}  ApiResponse
 // @Router       /chat/completions [post]
 func (h *Handler) ChatCompletions(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
@@ -37,7 +36,6 @@ func (h *Handler) ChatCompletions(w http.ResponseWriter, r *http.Request) {
 // @Accept       json
 // @Produce      json
 // @Success      200  {object}  ApiResponse
-// @Failure      500  {object}  ApiResponse
 // @Router       /completions [post]
 func (h *Handler) Completions(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
@@ -65,7 +63,6 @@ func (h *Handler) Completions(w http.ResponseWriter, r *http.Request) {
 // @Accept       json
 // @Produce      json
 // @Success      200  {object}  ApiResponse
-// @Failure      500  {object}  ApiResponse
 // @Router       /embeddings [post]
 func (h *Handler) Embeddings(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
@@ -93,7 +90,6 @@ func (h *Handler) Embeddings(w http.ResponseWriter, r *http.Request) {
 // @Accept       json
 // @Produce      json
 // @Success      200  {object}  ApiResponse
-// @Failure      500  {object}  ApiResponse
 // @Router       /moderations [post]
 func (h *Handler) Moderations(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
@@ -114,9 +110,37 @@ func (h *Handler) Moderations(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+// Models godoc
+// @Summary      Forward models requests
+// @Description  Forwards model list requests to the configured endpoint
+// @Tags         openai
+// @Accept       json
+// @Produce      json
+// @Success      200  {object}  ApiResponse
+// @Router       /models [get]
+func (h *Handler) Models(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodGet {
+		w.WriteHeader(http.StatusMethodNotAllowed)
+		jsonResponse(w, ApiResponse{
+			Message: "Only GET requests are allowed",
+			Object:  "error",
+		})
+		return
+	}
+	h.logger.Printf("Models request from %s: %s %s", r.RemoteAddr, r.Method, r.URL.Path)
+	if err := h.forwardRequest(w, r); err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		jsonResponse(w, ApiResponse{
+			Message: "Error forwarding request: " + err.Error(),
+			Object:  "error",
+		})
+	}
+}
+
 func SetupRoutes(h *Handler) {
 	http.HandleFunc("/v1/chat/completions", h.ChatCompletions)
 	http.HandleFunc("/v1/completions", h.Completions)
 	http.HandleFunc("/v1/embeddings", h.Embeddings)
 	http.HandleFunc("/v1/moderations", h.Moderations)
+	http.HandleFunc("/v1/models", h.Models)
 }

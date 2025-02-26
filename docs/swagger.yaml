@@ -28,10 +28,6 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/handlers.ApiResponse'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/handlers.ApiResponse'
       summary: Forward chat completions requests
       tags:
       - openai
@@ -45,10 +41,6 @@ paths:
       responses:
         "200":
           description: OK
-          schema:
-            $ref: '#/definitions/handlers.ApiResponse'
-        "500":
-          description: Internal Server Error
           schema:
             $ref: '#/definitions/handlers.ApiResponse'
       summary: Forward completions requests
@@ -66,11 +58,22 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/handlers.ApiResponse'
-        "500":
-          description: Internal Server Error
+      summary: Forward embeddings requests
+      tags:
+      - openai
+  /models:
+    get:
+      consumes:
+      - application/json
+      description: Forwards model list requests to the configured endpoint
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
           schema:
             $ref: '#/definitions/handlers.ApiResponse'
-      summary: Forward embeddings requests
+      summary: Forward models requests
       tags:
       - openai
   /moderations:
@@ -83,10 +86,6 @@ paths:
       responses:
         "200":
           description: OK
-          schema:
-            $ref: '#/definitions/handlers.ApiResponse'
-        "500":
-          description: Internal Server Error
           schema:
             $ref: '#/definitions/handlers.ApiResponse'
       summary: Forward moderations requests

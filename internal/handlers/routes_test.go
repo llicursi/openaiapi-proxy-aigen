@@ -133,3 +133,49 @@ func TestSetupRoutes(t *testing.T) {
 		})
 	}
 }
+
+func TestModels(t *testing.T) {
+	tests := []struct {
+		name           string
+		method         string
+		expectedStatus int
+		expectedBody   string
+	}{
+		{
+			name:           "Valid GET request",
+			method:         http.MethodGet,
+			expectedStatus: http.StatusInternalServerError, // Since forwardRequest will fail in tests
+			expectedBody:   "Error forwarding request",
+		},
+		{
+			name:           "Invalid POST request",
+			method:         http.MethodPost,
+			expectedStatus: http.StatusMethodNotAllowed,
+			expectedBody:   `{"message":"Only GET requests are allowed","model":"","object":"error"}`,
+		},
+		{
+			name:           "Invalid PUT request",
+			method:         http.MethodPut,
+			expectedStatus: http.StatusMethodNotAllowed,
+			expectedBody:   `{"message":"Only GET requests are allowed","model":"","object":"error"}`,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			// Create a new request
+			req := httptest.NewRequest(tt.method, "/v1/models", nil)
+			w := httptest.NewRecorder()
+
+			// Create a new handler with a mock logger
+			h := NewHandler(Config{})
+
+			// Call the Models handler
+			h.Models(w, req)
+
+			// Check if the status code matches expected
+			assert.Equal(t, tt.expectedStatus, w.Code)
+			assert.Equal(t, tt.expectedBody+"\n", w.Body.String())
+		})
+	}
+}

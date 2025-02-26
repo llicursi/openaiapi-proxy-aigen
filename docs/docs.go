@@ -34,12 +34,6 @@ const docTemplate = `{
                         "schema": {
                             "$ref": "#/definitions/handlers.ApiResponse"
                         }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/handlers.ApiResponse"
-                        }
                     }
                 }
             }
@@ -60,12 +54,6 @@ const docTemplate = `{
                 "responses": {
                     "200": {
                         "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/handlers.ApiResponse"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
                         "schema": {
                             "$ref": "#/definitions/handlers.ApiResponse"
                         }
@@ -92,9 +80,26 @@ const docTemplate = `{
                         "schema": {
                             "$ref": "#/definitions/handlers.ApiResponse"
                         }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
+                    }
+                }
+            }
+        },
+        "/models": {
+            "get": {
+                "description": "Forwards model list requests to the configured endpoint",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "openai"
+                ],
+                "summary": "Forward models requests",
+                "responses": {
+                    "200": {
+                        "description": "OK",
                         "schema": {
                             "$ref": "#/definitions/handlers.ApiResponse"
                         }
@@ -118,12 +123,6 @@ const docTemplate = `{
                 "responses": {
                     "200": {
                         "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/handlers.ApiResponse"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
                         "schema": {
                             "$ref": "#/definitions/handlers.ApiResponse"
                         }
